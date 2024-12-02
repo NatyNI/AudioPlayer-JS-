@@ -14,10 +14,10 @@ volumeControl.addEventListener("wheel", (event) =>{
     const deltaY = event.deltaY  
     console.log(audio.volume)
     if (deltaY < 0) {
-        audio.volume = Math.max(audio.volume - 0.005, 0)   
+        audio.volume = Math.max(audio.volume - 0.05, 0)   
     } 
     else if (deltaY > 0) {
-        audio.volume = Math.max(audio.volume + 0.005, 0.09)
+        audio.volume = Math.max(audio.volume + 0.05, 0.09)
     }
 } )
 
