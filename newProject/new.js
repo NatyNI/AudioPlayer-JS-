@@ -11,19 +11,19 @@ const speedButton = document.getElementById("button-speed")
 
 volumeControl.addEventListener("wheel", (event) =>{
     event.preventDefault
-    const deltaY = event.deltaY  
-    console.log(audio.volume)
+    const deltaY = event.deltaY;  
     if (deltaY < 0) {
-        audio.volume = Math.max(audio.volume - 0.05, 0)   
+        audio.volume = Math.max(audio.volume - 0.05, 0);
+        volumeControl.value = audio.volume;  
     } 
     else if (deltaY > 0) {
-        audio.volume = Math.max(audio.volume + 0.05, 0.09)
+        audio.volume = Math.min(audio.volume + 0.05, 1);
+        volumeControl.value = audio.volume;
     }
 } )
 
 playPauseBtn.addEventListener("click", ()=> {
-    console.log(audio.volume)
-    audio.volume = volumeControl.value / 100;
+    audio.volume = volumeControl.value ;
     if (audio.paused) {
         audio.play();
         playPauseBtn.textContent='Pause';
@@ -37,7 +37,6 @@ audio.addEventListener('timeupdate', function() {
     
     currentTimE.textContent = formatTime(audio.currentTime);
     timeRemaining.textContent =  formatTime(audio.duration - audio.currentTime);
-
 });
 
 progressBar.addEventListener("input", () => {
@@ -46,8 +45,7 @@ progressBar.addEventListener("input", () => {
 })
 
 volumeControl.addEventListener("input", ()=>{
-    audio.volume = volumeControl.value / 100;
-
+    audio.volume = volumeControl.value ;
 });
 
 speedButton.addEventListener("click", () => {
