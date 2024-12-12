@@ -5,73 +5,74 @@ const audios =[
     new Audio("https://picuridinfaguri.s3.eu-west-2.amazonaws.com/cezar_sandra-intre-nevoie-si-chemare-2024-11-17.mp3"),
     new Audio("https://picuridinfaguri.s3.eu-west-2.amazonaws.com/cezar_sandra-emotie-sau-cercetare-2024-10-17.mp3")
 ]
-// musics
-const cugetul = document.getElementById("cugetul")
-const nevoiechemare = document.getElementById("nevoieChemare")
-const emotieCercetare = document.getElementById("emotieCercetare")
+// namePrechs name 
+const namePrechs = document.getElementsByClassName("list-music")
 
-//multifunctionalities player 
-const showNamepreach = document.getElementById("namePreach")
-const playPauseBtn = document.getElementById("play-pause")
-const currentTimE = document.getElementById("current-time")
-const timeRemaining = document.getElementById("time-remaining")
-const progressBar = document.getElementById("progress-bar")
-const volumeControl = document.getElementById("volume-control")
-const speedButton = document.getElementById("button-speed")
+//mediaPlayer components 
+const showNamepreach = document.getElementById("namePreach");
+const playPauseBtn = document.getElementById("play-pause");
+const currentTimE = document.getElementById("current-time");
+const timeRemaining = document.getElementById("time-remaining");
+const progressBar = document.getElementById("progress-bar");
+const volumeControl = document.getElementById("volume-control");
+const speedButton = document.getElementById("button-speed");
 
-// global variabile for music
-let audio
+// global variabile for audio prech when click on a prech
+let audio;
 
-// listener for each music
-cugetul.addEventListener("click", function(event) {
-    for(let i = 0; i < audios.length; i++){
-        if (audios[i] != event.target){
-            audios[i].pause();}}
-    
-    showNamepreach.value = cugetul.textContent
-    audio= audios[0]
-    audio.play()
-
-    audio.addEventListener('timeupdate', function() {
-        currentTimE.textContent = formatTime(audio.currentTime);
-        timeRemaining.textContent =  formatTime(audio.duration - audio.currentTime);
-    });
-});
-
-nevoiechemare.addEventListener("click", function(event) {
-    for(let i = 0; i < audios.length; i++){
-        if (audios[i] != event.target){
-            audios[i].pause();}}
-
-    showNamepreach.value = nevoiechemare.textContent
-    audio= audios[1]
-    audio.play()
+//take the name and audio of prech when click on it
+[...namePrechs].forEach((nameprech) => {
+    nameprech.addEventListener("click", function(event) {
+        for(let i = 0; i < audios.length; i++){
+            if (audios[i] != event.target){
+                audios[i].pause();}}
+        showNamepreach.value = nameprech.textContent
+        audio= audios[[...namePrechs].indexOf(nameprech)]
+        audio.play();
+        playPauseBtn.textContent = "Pause";
+        audio.volume = volumeControl.value;
 
     audio.addEventListener('timeupdate', function() {
         currentTimE.textContent = formatTime(audio.currentTime);
         timeRemaining.textContent =  formatTime(audio.duration - audio.currentTime);
     });
 });
+});
 
-emotieCercetare.addEventListener("click", function(event) {
-    for(let i = 0; i < audios.length; i++){
-        if (audios[i] != event.target){
-            audios[i].pause();}}
+// listener "mouseover" for every preach when you wait for 2 seconds on it, and listener "mouseout" after you leave from the prech
+[...namePrechs].forEach((nameprech) => {
+    let timer = 0;
+    let secondaudio;
 
-    showNamepreach.value = emotieCercetare.textContent
-    audio= audios[2]
-    audio.play()
+    nameprech.addEventListener("mouseover", function(event) {
+        timer = setTimeout(() => {
+            clearTimeout(timer);
+            console.log(timer);
+            for(let i = 0; i < audios.length; i++){
+            if (audios[i] != event.target){
+                audios[i].pause();}}
 
-    audio.addEventListener('timeupdate', function() {
-        currentTimE.textContent = formatTime(audio.currentTime);
-        timeRemaining.textContent =  formatTime(audio.duration - audio.currentTime);
-    });
+            secondaudio= audios[[...namePrechs].indexOf(nameprech)]
+            secondaudio.play();
+            secondaudio.volume = volumeControl.value;
+
+    nameprech.addEventListener("mouseout", function(event) {
+        if (timer) {
+            clearTimeout(timer);
+            timer = 0;
+            secondaudio.pause();
+            audio.play();
+            
+                }
+        }); 
+
+    },2000);
+    });  
 });
 
 
-// multifunctionalities for each music
 volumeControl.addEventListener("wheel", (event) =>{
-    event.preventDefault
+    event.preventDefault;
     const deltaY = event.deltaY;  
     if (deltaY < 0) {
         audio.volume = Math.max(audio.volume - 0.05, 0);
@@ -83,8 +84,8 @@ volumeControl.addEventListener("wheel", (event) =>{
     }
 });
 
+
 playPauseBtn.addEventListener("click", ()=> {
-    audio.volume = volumeControl.value ;
     if (audio.paused) {
         audio.play();
         playPauseBtn.textContent='Pause';
@@ -100,12 +101,13 @@ progressBar.addEventListener("input", () => {
     currentTimE.textContent = formatTime(audio.currentTime);
 });
 
+
 volumeControl.addEventListener("input", ()=>{
     audio.volume = volumeControl.value ;
 });
 
+
 speedButton.addEventListener("click", () => {
-    console.log(audio)
     if (audio.playbackRate == 1){
         audio.playbackRate = 1.2;
         speedButton.textContent = `${audio.playbackRate}X`;
@@ -123,6 +125,7 @@ speedButton.addEventListener("click", () => {
         speedButton.textContent = `${audio.playbackRate}X`;
     }
 })
+
 
 function formatTime(seconds) {
     var minutes = Math.floor(seconds / 60);
